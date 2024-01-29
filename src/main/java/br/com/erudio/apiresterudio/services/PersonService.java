@@ -6,7 +6,10 @@ import java.util.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import br.com.erudio.apiresterudio.controllers.PersonControler;
 import br.com.erudio.apiresterudio.data.vo.v1.PersonVo;
 import br.com.erudio.apiresterudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.apiresterudio.mapper.custom.PersonMapper;
@@ -34,22 +37,27 @@ public class PersonService {
     public PersonVo findById(Long id) {
         logger.info("Finding one person!");
         Person person = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
-        var vo = mapper.map(person, PersonVo.class);
+        PersonVo vo = mapper.map(person, PersonVo.class);
+        vo.add(linkTo(methodOn(PersonControler.class).findById(id)).withSelfRel());
+        vo.setKey(id);
         return vo;
     }
 
-    public PersonVo create(PersonVo person) {
+    public PersonVo create(PersonVo personVo) {
         logger.info("Creating person!");
-        var entity = mapper.map(person, Person.class);
-        var vo = repository.save(entity);
-        return mapper.map(vo, PersonVo.class);
+        Person entity = mapper.map(personVo, Person.class);
+        Person person = repository.save(entity);
+        PersonVo vo = mapper.map(person, PersonVo.class);
+        vo.setKey(person.getId());
+        return vo;
     }
 
     public PersonVo update(PersonVo personVo) {
         logger.info("Updating person!");
-        Person entity = repository.findById(personVo.getId()).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
+        Person entity = repository.findById(personVo.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
         entity = updatePerson(entity, personVo);
         var vo = mapper.map(repository.save(entity), PersonVo.class);
+        vo.setKey(entity.getId());
         return vo;
     }
 

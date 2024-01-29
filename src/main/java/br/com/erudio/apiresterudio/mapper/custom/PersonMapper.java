@@ -21,7 +21,9 @@ public class PersonMapper {
 
     public List<PersonVo> findAllVo(List<Person> listPersons){
         for (Person person : listPersons) {
-            listVo.add(mapper.map(person, PersonVo.class));
+            var vo = mapper.map(person, PersonVo.class);
+            vo.setKey(person.getId());
+            listVo.add(vo);
         }
         return listVo;
     }
