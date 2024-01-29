@@ -1,0 +1,17 @@
+# Configurações Terminal
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+
+  # Configurações do Banco de Dados MySQL
+  datasource:
+    url: jdbc:mysql://localhost:3306/rest_with_spring_boot
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Configurações de Hibernação
+  jpa:
+    hibernate:
+        ddl-auto: none
