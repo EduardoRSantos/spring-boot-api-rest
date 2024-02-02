@@ -27,9 +27,7 @@ public class PersonService {
     public List<PersonVo> findAll() {
         var listPersons = repository.findAll();
          var listVO = ModelMapperCustom.parseListObjects(listPersons, PersonVo.class);
-         listVO.forEach(x -> {
-             x.add(linkTo(methodOn(PersonControler.class).findAll()).withSelfRel());
-         });
+         listVO.forEach(x -> x.add(linkTo(methodOn(PersonControler.class).findAll()).withSelfRel()));
          return listVO;
     }
 
@@ -55,11 +53,10 @@ public class PersonService {
     public PersonVo update(PersonVo personVo) {
         if(personVo == null) throw new RequireObjectIsNullException();
         logger.info("Updating person!");
-        Person entity = repository.findById(personVo.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
-        entity = updatePerson(entity, personVo);
-        var vo = ModelMapperCustom.parseObject(repository.save(entity), PersonVo.class);
+        Person person = repository.findById(personVo.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
+        var personUpdate = updatePerson(person, personVo);
+        var vo = ModelMapperCustom.parseObject(repository.save(personUpdate), PersonVo.class);
         vo.add(linkTo(methodOn(PersonControler.class).findById(personVo.getKey())).withSelfRel());
-
         return vo;
     }
 
