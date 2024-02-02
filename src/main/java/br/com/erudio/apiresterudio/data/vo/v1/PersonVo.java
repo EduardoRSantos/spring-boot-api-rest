@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
 @Data
-@JsonPropertyOrder({"firstName","lastName","address","gender","id"})
+@JsonPropertyOrder({"id","firstName","lastName","address","gender"})
 public class PersonVo extends RepresentationModel<PersonVo>  implements Serializable {
 
     private Long key;

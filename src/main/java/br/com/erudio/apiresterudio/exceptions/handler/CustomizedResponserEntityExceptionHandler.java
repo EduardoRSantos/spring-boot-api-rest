@@ -2,6 +2,7 @@ package br.com.erudio.apiresterudio.exceptions.handler;
 
 import java.util.Date;
 
+import br.com.erudio.apiresterudio.exceptions.RequireObjectIsNullException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,4 +34,13 @@ public class CustomizedResponserEntityExceptionHandler extends ResponseEntityExc
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
     }
+
+    @ExceptionHandler(RequireObjectIsNullException.class)
+    public ResponseEntity<ExceptionResponse> handleBadRequestException(RequireObjectIsNullException e, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), e.getMessage(), request.getDescription(false));
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
+
+
 }
