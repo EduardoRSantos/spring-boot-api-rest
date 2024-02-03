@@ -64,16 +64,42 @@ class PersonServiceTest {
 
         when(personRepository.findAll()).thenReturn(listPerson);
 
-        var result = personService.findAll();
+        var people = personService.findAll();
 
-        assertNotNull(result);
-        for (int i=0;i < result.size(); i++ ){
-            assertNotNull(result.get(i).getKey());
-            assertNotNull(result.get(i).getLinks());
-            assertEquals("First Name Test"+i , result.get(i).getFirstName());
-            assertEquals("Last Name Test"+i, result.get(i).getLastName());
-            assertEquals("Addres Test"+i,result.get(i).getAddress());
-        }
+        assertNotNull(people);
+        assertEquals(14, people.size());
+
+        var personOne = people.get(1);
+
+        assertNotNull(personOne);
+        assertNotNull(personOne.getLinks());
+        assertNotNull(personOne.getKey());
+        assertEquals("First Name Test1", personOne.getFirstName());
+        assertEquals("Last Name Test1", personOne.getLastName());
+        assertEquals("Addres Test1", personOne.getAddress());
+        assertEquals("Female", personOne.getGender());
+
+
+        var personThree = people.get(3);
+
+        assertNotNull(personThree);
+        assertNotNull(personThree.getLinks());
+        assertNotNull(personThree.getKey());
+        assertEquals("First Name Test3", personThree.getFirstName());
+        assertEquals("Last Name Test3", personThree.getLastName());
+        assertEquals("Addres Test3", personThree.getAddress());
+        assertEquals("Female", personThree.getGender());
+
+
+        var personTwelve = people.get(12);
+
+        assertNotNull(personTwelve);
+        assertNotNull(personTwelve.getLinks());
+        assertNotNull(personTwelve.getKey());
+        assertEquals("First Name Test12", personTwelve.getFirstName());
+        assertEquals("Last Name Test12", personTwelve.getLastName());
+        assertEquals("Addres Test12", personTwelve.getAddress());
+        assertEquals("Male", personTwelve.getGender());
     }
 
 
