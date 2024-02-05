@@ -15,3 +15,8 @@ spring:
   jpa:
     hibernate:
         ddl-auto: none
+  # Para que seja documentado apenas os paths
+springdoc:
+  pathsToMatch: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true
