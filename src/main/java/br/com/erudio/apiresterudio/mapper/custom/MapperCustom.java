@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ModelMapperCustom {
+public class MapperCustom {
 
     private static final ModelMapper mapper =  new ModelMapper();
 

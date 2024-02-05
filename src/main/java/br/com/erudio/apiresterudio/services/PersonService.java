@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import br.com.erudio.apiresterudio.exceptions.RequireObjectIsNullException;
-import br.com.erudio.apiresterudio.mapper.custom.ModelMapperCustom;
+import br.com.erudio.apiresterudio.mapper.custom.MapperCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -26,7 +26,7 @@ public class PersonService {
 
     public List<PersonVo> findAll() {
         var listPersons = repository.findAll();
-         var listVO = ModelMapperCustom.parseListObjects(listPersons, PersonVo.class);
+         var listVO = MapperCustom.parseListObjects(listPersons, PersonVo.class);
          listVO.forEach(x -> x.add(linkTo(methodOn(PersonControler.class).findAll()).withSelfRel()));
          return listVO;
     }
@@ -34,7 +34,7 @@ public class PersonService {
     public PersonVo findById(Long id) {
         logger.info("Finding one person!");
         Person person = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
-        PersonVo vo = ModelMapperCustom.parseObject(person, PersonVo.class);
+        PersonVo vo = MapperCustom.parseObject(person, PersonVo.class);
         vo.add(linkTo(methodOn(PersonControler.class).findById(id)).withSelfRel());
         return vo;
     }
@@ -42,9 +42,9 @@ public class PersonService {
     public PersonVo create(PersonVo personVo) {
         if(personVo == null) throw new RequireObjectIsNullException();
         logger.info("Creating person!");
-        Person entity = ModelMapperCustom.parseObject(personVo, Person.class);
+        Person entity = MapperCustom.parseObject(personVo, Person.class);
         Person person = repository.save(entity);
-        PersonVo vo = ModelMapperCustom.parseObject(person, PersonVo.class);
+        PersonVo vo = MapperCustom.parseObject(person, PersonVo.class);
         vo.add(linkTo(methodOn(PersonControler.class).findById(person.getId())).withSelfRel());
 
         return vo;
@@ -55,14 +55,14 @@ public class PersonService {
         logger.info("Updating person!");
         Person person = repository.findById(personVo.getKey()).orElseThrow(() -> new ResourceNotFoundException("No records found this Id"));
         var personUpdate = updatePerson(person, personVo);
-        var vo = ModelMapperCustom.parseObject(repository.save(personUpdate), PersonVo.class);
+        var vo = MapperCustom.parseObject(repository.save(personUpdate), PersonVo.class);
         vo.add(linkTo(methodOn(PersonControler.class).findById(personVo.getKey())).withSelfRel());
         return vo;
     }
 
     public void remove(Long id) {
         var vo = findById(id);
-        var person = ModelMapperCustom.parseObject(vo, Person.class);
+        var person = MapperCustom.parseObject(vo, Person.class);
         repository.delete(person);
     }
 
