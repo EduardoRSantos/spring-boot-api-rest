@@ -13,6 +13,7 @@ import lombok.Data;
 @JsonPropertyOrder({"id","firstName","lastName","address","gender"})
 public class PersonVo extends RepresentationModel<PersonVo>  implements Serializable {
 
+    @JsonProperty("id")
     private Long key;
 
     @JsonProperty("first_name")
