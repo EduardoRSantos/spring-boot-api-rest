@@ -3,7 +3,6 @@ package br.com.erudio.apiresterudio.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.DateTimeException;
 import java.util.Date;
 
 @Entity
