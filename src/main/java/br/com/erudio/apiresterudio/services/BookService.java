@@ -13,6 +13,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -21,8 +22,8 @@ public class BookService {
     private BookRepository repository;
 
     public List<BookVo> findAll(){
-        List<Book> listBook = repository.findAll();
-        List<BookVo> listBookVo = MapperCustom.parseListObjects(listBook, BookVo.class);
+        var listBook = repository.findAll();
+        var listBookVo = MapperCustom.parseListObjects(listBook, BookVo.class);
         listBookVo.forEach(x->{x.add(linkTo(methodOn(BookControler.class).findAll()).withSelfRel());});
         listBookVo.get(1).setLaunchDate(listBook.get(1).getLaunchDate());
         return listBookVo;
@@ -36,12 +37,27 @@ public class BookService {
         return entityVo;
     }
 
-    public void update(){
+    public BookVo update(BookVo newBookVo){
+        var entityVo = findById(newBookVo.getKey());
+        var BookCurrent = MapperCustom.parseObject(updateBook(entityVo, newBookVo), Book.class);
+        BookCurrent = repository.save(BookCurrent);
+        return MapperCustom.parseObject(BookCurrent, BookVo.class);
     }
 
-    public void delete(){
-
+    public void delete(Integer id){
+        var entity = repository.findById(id).orElseThrow(RequireObjectIsNullException::new);
+        repository.delete(entity);
     }
 
+
+    private BookVo updateBook(BookVo entityVo,BookVo newBookVo){
+        entityVo.setKey(newBookVo.getKey());
+        entityVo.setAuthor(newBookVo.getAuthor());
+        entityVo.setLaunchDate(newBookVo.getLaunchDate());
+        entityVo.setPrice(newBookVo.getPrice());
+        entityVo.setTitle(newBookVo.getTitle());
+
+        return entityVo;
+    }
 
 }
