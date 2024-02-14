@@ -2,10 +2,13 @@ package br.com.erudio.apiresterudio.services;
 
 
 import br.com.erudio.apiresterudio.controllers.BookControler;
+import br.com.erudio.apiresterudio.controllers.PersonControler;
 import br.com.erudio.apiresterudio.data.vo.v1.BookVo;
+import br.com.erudio.apiresterudio.data.vo.v1.PersonVo;
 import br.com.erudio.apiresterudio.exceptions.RequireObjectIsNullException;
 import br.com.erudio.apiresterudio.mapper.custom.MapperCustom;
 import br.com.erudio.apiresterudio.models.Book;
+import br.com.erudio.apiresterudio.models.Person;
 import br.com.erudio.apiresterudio.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,11 +40,22 @@ public class BookService {
         return entityVo;
     }
 
+    public BookVo create(BookVo BookVo) {
+        if(BookVo == null) throw new RequireObjectIsNullException();
+        var entity = MapperCustom.parseObject(BookVo, Book.class);
+        var book = repository.save(entity);
+        var vo = MapperCustom.parseObject(book, BookVo.class);
+        vo.add(linkTo(methodOn(BookControler.class).findById(book.getId())).withSelfRel());
+        return vo;
+    }
+
     public BookVo update(BookVo newBookVo){
         var entityVo = findById(newBookVo.getKey());
-        var BookCurrent = MapperCustom.parseObject(updateBook(entityVo, newBookVo), Book.class);
-        BookCurrent = repository.save(BookCurrent);
-        return MapperCustom.parseObject(BookCurrent, BookVo.class);
+        var bookCurrent = MapperCustom.parseObject(updateBook(entityVo, newBookVo), Book.class);
+        bookCurrent = repository.save(bookCurrent);
+        var vo = MapperCustom.parseObject(bookCurrent, BookVo.class);
+        vo.add(linkTo(methodOn(BookControler.class).findById(vo.getKey())).withSelfRel());
+        return vo;
     }
 
     public void delete(Integer id){

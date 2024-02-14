@@ -1,6 +1,8 @@
 package br.com.erudio.apiresterudio.controllers;
 
 import br.com.erudio.apiresterudio.data.vo.v1.BookVo;
+import br.com.erudio.apiresterudio.data.vo.v1.PersonVo;
+import br.com.erudio.apiresterudio.models.Book;
 import br.com.erudio.apiresterudio.services.BookService;
 import br.com.erudio.apiresterudio.util.MediaType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +47,22 @@ public class BookControler {
     )
     public ResponseEntity<BookVo> findById(@PathVariable(name = "id") Integer id ){ return ResponseEntity.ok().body(service.findById(id)); }
 
-
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML },
+            produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML })
+    @Operation(summary = "To add a Book",
+            description = "add a new book by passing JSON, XML or YML, representation the book",
+            tags = {"Book"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content =
+                    @Content(schema = @Schema(implementation = BookVo.class))),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
+            }
+    )
+    public ResponseEntity<BookVo> create(@RequestBody BookVo bookVo) {
+        return ResponseEntity.ok().body(service.create(bookVo));
+    }
     @PutMapping(produces = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML},
     consumes = {MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.APPLICATION_YML})
     @Operation(summary = "Update Book", description = "by passing JSON, XML or YML, representation the book", tags = {"Book"},
