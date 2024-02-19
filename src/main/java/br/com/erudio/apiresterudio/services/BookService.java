@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.List;
 
+import br.com.erudio.apiresterudio.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class BookService {
     }
 
     public BookVo findById(Integer id) {
-        var entity = repository.findById(id).orElseThrow(RequireObjectIsNullException::new);
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The object is not exists"));
         var entityVo = MapperCustom.parseObject(entity, BookVo.class);
         entityVo.add(linkTo(methodOn(BookControler.class).findById(entityVo.getKey())).withSelfRel());
         entityVo.setLaunchDate(entity.getLaunchDate());

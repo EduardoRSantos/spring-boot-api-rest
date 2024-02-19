@@ -11,13 +11,9 @@ import java.util.List;
 
 public class MockBook {
 
-    public Book mockEntity() {
-        return mockBookEntity(0);
-    }
+    public Book mockBookEntity() { return mockBookEntity(0); }
 
-    public BookVo mockVO() {
-        return mockBookVO(0);
-    }
+    public BookVo mockBookVO() { return mockBookVO(0); }
 
 
     public List<Book> MockBookEntityList(){
@@ -40,7 +36,7 @@ public class MockBook {
         book.setId(number);
         book.setAuthor("Author test" + number);
         book.setTitle("Title test" + number);
-        book.setPrice(number.doubleValue());
+        book.setPrice(25D);
         book.setLaunchDate(new Date());
 
         return book;
@@ -50,7 +46,7 @@ public class MockBook {
         bookVo.setKey(number);
         bookVo.setAuthor("Author test" + number);
         bookVo.setTitle("Title test" + number);
-        bookVo.setPrice(number.doubleValue());
+        bookVo.setPrice(25D);
         bookVo.setLaunchDate(new Date());
         return bookVo;
     }
